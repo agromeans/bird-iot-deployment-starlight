@@ -21,13 +21,13 @@ def run(args):
         new_version = item.get('version')
         
         os.system(f"docker exec {service_name} cat agromeans/config.ini > {service_name}.txt")
-        itself_version = util.read_config_value(f"{service_name}.txt", 'common', 'version')
+        itself_version = util.read_config_value(f"{service_name}.txt", 'common', 'version').strip()
         
         # 3. check the version is equal
         if itself_version != new_version:
             # 4. get hub url if the version is not equal
             hub_info = opt.get_hub_info_from_server(args.server, service_name)
-            hub_name = hub_info.split('agromeans/')[1].replace('.git', '')
+            hub_name = hub_info.split('/')[-1].replace('.git', '')
             repo_name = hub_name.replace('-hub', '')
             
             # 5. remove hub and itself_version.txt
