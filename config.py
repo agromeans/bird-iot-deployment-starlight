@@ -11,11 +11,12 @@ version = ''
 path_root = ''
 path_token = ''
 path_frpc = ''
-path_github = ''
 frp_server = ''
 frp_user = ''
 
 api_token_get = ''
+api_version_get = ''
+api_hub_info_get = ''
 token = ''
 
 def get_version():
@@ -34,7 +35,7 @@ def check_config_section():
     config.write(open(config_file, 'w'))
     
 def get_config():
-    global version, path_root, path_token, path_frpc, path_github, api_token_get
+    global version, path_root, path_token, path_frpc, api_token_get, api_version_get, api_hub_info_get
     
     try:
         version = config.get('common', 'version')
@@ -65,18 +66,25 @@ def get_config():
         path_frpc = ''
         
     try:
-        path_github = config.get('path', 'github')
-    except Exception as e:
-        logger.warning(e)
-        print(e)
-        path_github = ''
-        
-    try:
         api_token_get = config.get('api', 'token_get')
     except Exception as e:
         logger.warning(e)
         print(e)
         api_token_get = ''
+        
+    try:
+        api_version_get = config.get('api', 'version_get')
+    except Exception as e:
+        logger.warning(e)
+        print(e)
+        api_version_get = ''
+        
+    try:
+        api_hub_info_get = config.get('api', 'hub_info_get')
+    except Exception as e:
+        logger.warning(e)
+        print(e)
+        api_hub_info_get = ''
         
 def get_frpc():
     global frp_server, frp_user
@@ -98,8 +106,6 @@ def get_frpc():
         print(e)
         frp_user = ''
         
-    # logger.info(f"====The device is using ssh frp: {frp_server}:{frp_user}====")
-    
 def get_token():
     global token
     
