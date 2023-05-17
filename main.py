@@ -32,7 +32,6 @@ def run(args):
             
             # 5. remove hub and itself_version.txt
             util.delete_folder_anyway(hub_name)
-            util.delete_file_anyway(f"{service_name}.txt")
             
             # 6. git clone hub, cd in the hub
             os.system(f"git clone --depth 1 {hub_info}")
@@ -51,6 +50,7 @@ def run(args):
             # 10. remove hub and itself_version.txt
             util.delete_folder_anyway(hub_name)
             
+        util.delete_file_anyway(f"{service_name}.txt")
 if __name__ == "__main__":
     args = process_command()
     config.reload_config()
