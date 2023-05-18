@@ -26,13 +26,17 @@ def run(args):
         # 3. check the version is equal
         if itself_version != new_version:
             # 4. get hub url if the version is not equal
-            hub_info = opt.get_hub_info_from_server(args.server, service_name)
+            hub_info, mkdir_list = opt.get_hub_info_from_server(args.server, service_name)
             hub_name = hub_info.split('/')[-1].replace('.git', '')
             repo_name = hub_name.replace('-hub', '')
             
             # 5. remove hub and itself_version.txt
             util.delete_folder_anyway(hub_name)
             
+            # 6. madir for folders
+            for _dir in mkdir_list:
+                os.system(f"mkdir -p {_dir}")
+                
             # 6. git clone hub, cd in the hub
             os.system(f"git clone --depth 1 {hub_info}")
             

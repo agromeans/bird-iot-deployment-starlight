@@ -23,7 +23,7 @@ def get_hub_info_from_server(server, service_name):
             logger.error('Server service is abnormal.')
             return None
             
-        return r.json().get('message').get('repo_hub')
+        return r.json().get('message').get('repo_hub'), r.json().get('message').get('mkdir')
     except json.decoder.JSONDecodeError:
         logger.error('The server service response format is invalid.')
     except Exception as e:
