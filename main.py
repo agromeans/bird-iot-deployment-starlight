@@ -12,10 +12,16 @@ def process_command():
     return parser.parse_args()
     
 def run(args):
-    # 1. get version list from server api
+    # 1. check and save token
+    token, _ = opt.get_info_from_server(args.server)
+    if token is None:
+        logger.error('device token is null, end process')
+    util.save_token(token)
+    
+    # 2. get version list from server api
     verison_list = opt.get_version_from_server(args.server)
     
-    # 2. get the version from itself services
+    # 3. get the version from itself services
     for item in verison_list:
         service_name = item.get('service_name')
         new_version = item.get('version')
@@ -23,35 +29,35 @@ def run(args):
         os.system(f"docker exec {service_name} cat agromeans/config.ini > {service_name}.txt")
         itself_version = util.read_config_value(f"{service_name}.txt", 'common', 'version').strip()
         
-        # 3. check the version is equal
+        # 4. check the version is equal
         if itself_version != new_version:
-            # 4. get hub url if the version is not equal
+            # 5. get hub url if the version is not equal
             hub_info, mkdir_list = opt.get_hub_info_from_server(args.server, service_name)
             hub_name = hub_info.split('/')[-1].replace('.git', '')
             repo_name = hub_name.replace('-hub', '')
             
-            # 5. remove hub and itself_version.txt
+            # 6. remove hub and itself_version.txt
             util.delete_folder_anyway(hub_name)
             
-            # 6. madir for folders
+            # 7. madir for folders
             for _dir in mkdir_list:
                 os.system(f"mkdir -p {_dir}")
                 
-            # 6. git clone hub, cd in the hub
+            # 8. git clone hub, cd in the hub
             os.system(f"git clone --depth 1 {hub_info}")
             
-            # 7. tar -zxvf package
+            # 9. tar -zxvf package
             os.system(f"cd {hub_name} && tar -zxvf package.tar.gz")
             
-            # 8. remove docker image and container
+            # 10. remove docker image and container
             os.system(f"docker rm -f {service_name}")
             os.system(f"docker rmi {service_name}")
             
-            # 9. docker build and docker-compose up
+            # 11. docker build and docker-compose up
             os.system(f"docker build -t {service_name} {hub_name}/{repo_name}/ --no-cache")
             os.system(f"/usr/local/bin/docker-compose -f {hub_name}/{repo_name}/docker-compose.yml up -d")
             
-            # 10. remove hub and itself_version.txt
+            # 12. remove hub and itself_version.txt
             util.delete_folder_anyway(hub_name)
             
         util.delete_file_anyway(f"{service_name}.txt")
