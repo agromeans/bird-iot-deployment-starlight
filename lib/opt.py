@@ -13,7 +13,7 @@ def get_hub_info_from_server(server, service_name):
     }
     
     try:
-        r = requests.post(f"https://{server}{config.api_hub_info_get}", json=d, verify=False, timeout=(3, 10))
+        r = requests.post(f"https://{server}{config.api_hub_info_get}", json=d, verify=False, timeout=(10, 30))
     except Exception as e:
         logger.error(str(e), exc_info=True)
         return None
@@ -36,7 +36,7 @@ def get_version_from_server(server):
     }
     
     try:
-        r = requests.post(f"https://{server}{config.api_version_get}", json=d, verify=False, timeout=(3, 10))
+        r = requests.post(f"https://{server}{config.api_version_get}", json=d, verify=False, timeout=(10, 30))
     except Exception as e:
         logger.error(str(e), exc_info=True)
         return []
@@ -63,7 +63,7 @@ def get_info_from_server(server):
     }
     
     try:
-        r = requests.post(f"https://{server}{config.api_token_get}", json=d, verify=False, timeout=(3, 10))
+        r = requests.post(f"https://{server}{config.api_token_get}", json=d, verify=False, timeout=(10, 30))
     except Exception as e:
         logger.error(str(e), exc_info=True)
         return None, None
